@@ -25,7 +25,7 @@ SECRET_KEY = 'yhqexc#z%$mqdlv0mqi9d^u()*5wna2j^@(kt5+br8qtk5%tku'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '.herokuapp.com']
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'slackers_app',
 ]
 
 MIDDLEWARE = [
