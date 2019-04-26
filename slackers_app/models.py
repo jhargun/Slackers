@@ -14,7 +14,6 @@ class User(models.Model):
 
 
 class Chat(models.Model):
-    id = models.CharField(max_length=100)
     user1 = models.CharField(max_length=100)  # Use usernames here (or make unique id if usernames not unique)
     user2 = models.CharField(max_length=100)
     time = models.DateTimeField(auto_now=True)  # Changes to current time every time object changed
