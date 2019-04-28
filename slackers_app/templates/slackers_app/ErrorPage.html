@@ -1,0 +1,15 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'slackers_app/ErrorPage.css' %}">
+
+<div id="center">
+  <h1>
+    YOU HAVE AN ERROR!
+  </h1>
+  <h1>
+  (Error: {{ error_name }})
+  </h1>
+  <a href="{{ index }}"> <button>
+    Bring me home
+  </button> </a>
+</div>
