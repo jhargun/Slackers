@@ -51,4 +51,4 @@ def index(request):
         })
 
 def home(request):
-    return HttpResponse('Login successful')
+    return render(request, 'slackers_app/home.html', {})
