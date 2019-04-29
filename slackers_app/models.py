@@ -7,7 +7,7 @@ from django.db import models
 class User(models.Model):
     username = models.CharField(max_length=100)
     password = models.CharField(max_length=100)  # Storing password as plaintext, terrible security, fix later
-    real_name = forms.CharField(max_length=100)
+    real_name = models.CharField(max_length=100, default='')
 
     def __str__(self):  # You can return username and password as string, seems like bad security
         return self.values()

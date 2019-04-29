@@ -4,7 +4,7 @@
 
 <div id='chat-list'>
   <div class='header'>
-    Logged in as '{{ username }}'
+    Welcome {{ real_name }}!
   </div>
   <div class='chat-min'>
     <img class='icon' src='http://placekitten.com/200/236'>
@@ -28,10 +28,10 @@
   </div>
   <div id='chat-body'>
     <div id='new-message'>
-      <form action="{{ page }}" method="post">
+      <form action="{{ page }}" method="post" autocomplete='off'>
         {% csrf_token %}
         {{ form }}
-        <input type="Send" value="Apply Changes">
+        <input type="submit" value="Send">
       </form>
     </div>
     <div class='message'>
