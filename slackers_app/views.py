@@ -4,7 +4,8 @@ from .forms import CreateForm, LoginForm
 from django.urls import reverse
 from .models import User
 
-#Makes new user
+
+# Makes new user
 def make(request):
     if request.method == 'POST':
         form = CreateForm(request.POST)
@@ -28,7 +29,8 @@ def make(request):
                 'index': reverse('slackers_app:index')
             })
 
-#Index page
+
+# Index page
 def index(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)

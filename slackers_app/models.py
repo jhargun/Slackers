@@ -3,9 +3,8 @@ from django.db import models
 # Create your models here.
 
 
-# If we're doing cookies, we're going to want a session id to be used to login, don't think we want it here, right?
+# If we're doing cookies, we're going to want a session id to be used to login, but I don't think it goes here
 class User(models.Model):
-    # Do we want display name as well or should that just be username
     username = models.CharField(max_length=100)
     password = models.CharField(max_length=100)  # Storing password as plaintext, terrible security, fix later
 
@@ -14,7 +13,7 @@ class User(models.Model):
 
 
 class Chat(models.Model):
-    user1 = models.CharField(max_length=100)  # Use usernames here (or make unique id if usernames not unique)
+    user1 = models.CharField(max_length=100)  # Use user id here
     user2 = models.CharField(max_length=100)
     time = models.DateTimeField(auto_now=True)  # Changes to current time every time object changed
 
