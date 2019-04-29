@@ -36,6 +36,7 @@ def index(request):
         form = LoginForm(request.POST)
         if form.is_valid():
             if User.objects.filter(username=form.cleaned_data['username'], password=form.cleaned_data['password']):
+                request.session['username'] = form.cleaned_data['username']
                 return HttpResponseRedirect(reverse('slackers_app:home'))
             else:
                 return render(request, 'slackers_app/ErrorPage.html',
@@ -53,4 +54,15 @@ def index(request):
         })
 
 def home(request):
-    return render(request, 'slackers_app/home.html', {})
+    if request.session.get('username'):
+        username = request.session.get('username')
+        return render(request, 'slackers_app/home.html',
+        {
+            'username': username
+        })
+    else:
+        return render(request, 'slackers_app/ErrorPage.html',
+            {
+                'error_name': 'User is not logged in',
+                'index': reverse('slackers_app:index')
+            })
