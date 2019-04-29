@@ -66,3 +66,5 @@ def home(request):
                 'error_name': 'User is not logged in',
                 'index': reverse('slackers_app:index')
             })
+
+    if request.method == 'POST':

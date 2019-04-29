@@ -68,13 +68,6 @@ body {
   border-top-style: solid;
 }
 
-#message-box {
-  font-family: serif;
-  font-size: 14pt;
-  height: 30px;
-  width: 100%;
-  margin: 10px 0;
-}
 
 body {
   display: flex;

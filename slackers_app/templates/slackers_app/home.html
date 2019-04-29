@@ -28,7 +28,11 @@
   </div>
   <div id='chat-body'>
     <div id='new-message'>
-      <input id='message-box'>
+      <form action="{{ page }}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="Send" value="Apply Changes">
+      </form>
     </div>
     <div class='message'>
       messsage1
