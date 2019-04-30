@@ -10,7 +10,7 @@ class User(models.Model):
     real_name = models.CharField(max_length=100, default='')
 
     def __str__(self):  # You can return username and password as string, seems like bad security
-        return self.values()
+        return str(self.id)
 
 
 class Chat(models.Model):
@@ -20,7 +20,7 @@ class Chat(models.Model):
     # I was planning to use this for the updating list of chats, but I'm not sure since it's not updating for messages
 
     def __str__(self):
-        return self.values()
+        return str(self.id)
 
 
 class Message(models.Model):
@@ -30,4 +30,4 @@ class Message(models.Model):
     time = models.DateTimeField(auto_now_add=True)  # Makes timestamp at time when object created
 
     def __str__(self):
-        return self.values()
+        return str(self.id)

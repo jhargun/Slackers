@@ -6,6 +6,9 @@
   <div class='header'>
     Welcome {{ real_name }}!
   </div>
+  <a href='{{ edit }}'> <button>
+    Edit user
+  </button> </a>
   <div class='chat-min'>
     <img class='icon' src='http://placekitten.com/200/236'>
     name
@@ -23,6 +26,7 @@
   </div>
 </div>
 <div id='chat'>
+  {% if messages %}
   <div id='chat-head'>
     name
   </div>
@@ -34,17 +38,11 @@
         <input type="submit" value="Send">
       </form>
     </div>
-    <div class='message'>
-      messsage1
-    </div>
-    <div class='message'>
-      messsage2
-    </div>
-    <div class='message'>
-      messsage3
-    </div>
-    <div class='message'>
-      messsage4
-    </div>
+    {% for m in messages %}
+      <div class='message'>
+        {{ m.content }}
+      <div>
+    {% endfor %}
   </div>
+  {% endif %}
 </div>

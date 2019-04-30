@@ -11,9 +11,13 @@ body {
 #chat-list {
   width: 20%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .chat-min {
+  width: 100%;
   height: 50px;
   padding: 5px 0;
   display: flex;
