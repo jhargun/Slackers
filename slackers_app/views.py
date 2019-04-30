@@ -60,6 +60,7 @@ When we have cookies, add those here to figure out who the sender is.
 user_send is the person the message is sent to, NOT the sender. Sender determined with cookies.
 '''
 def user_page(request, user_send):
+    # If implemented like this, username needs to be exclusive
     c = Chat.objects.filter(user1='''put user from cookie here''', user2=user_send)
     # Checks if there is a chat with those 2 users; should we send error or just make a new one?
     if not c:
@@ -85,13 +86,8 @@ def user_page(request, user_send):
                       'index': reverse('slackers_app:index'),
                   })
 
-'''
+
 def home(request):
-<<<<<<< HEAD
-    return render(request, 'slackers_app/home.html', {})
-
-
-=======
     if request.method == 'POST':
         form = MessageForm(request.POST)
         if form.is_valid():
@@ -116,4 +112,3 @@ def home(request):
                     'error_name': 'User is not logged in',
                     'index': reverse('slackers_app:index')
                 })
-'''
