@@ -4,15 +4,19 @@
 
 <div id="center">
   <div class="block flex-container">
-    <a href="{{ make }}" class="button color1">
-      <p> Create a new User </p>
-    </a>
-    <div class="button color2">
+    <div class="section">
+      <h2> Welcome to Slackers! </h2>
+      <p> Please login in below or create a new user <p>
+    </div>
+    <div class="button section">
       <form action="{{ index }}" method="post" autocomplete="off">
         {% csrf_token %}
         {{ form }}
         <input class="button-mini" type="Submit" value="Login">
       </form>
     </div>
+    <a href="{{ make }}" class="button color1">
+      <p> Create a new User </p>
+    </a>
   </div>
 </div>
