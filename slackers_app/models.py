@@ -16,6 +16,7 @@ class Chat(models.Model):
     user1 = models.CharField(max_length=100)  # Use user id here
     user2 = models.CharField(max_length=100)
     time = models.DateTimeField(auto_now=True)  # Changes to current time every time object changed
+    # I was planning to use this for the updating list of chats, but I'm not sure since it's not updating for messages
 
     def __str__(self):
         return self.values()

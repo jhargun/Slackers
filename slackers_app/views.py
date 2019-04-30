@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import CreateForm, LoginForm
+from .forms import CreateForm, LoginForm, MessageForm
 from django.urls import reverse
-from .models import User
+from .models import User,Chat, Message
 
 
 # Makes new user
@@ -52,5 +52,40 @@ def index(request):
             'index': reverse('slackers_app:index')
         })
 
+
+'''
+We don't have a user page html file yet, but I'm making this with the assumption that we do.
+When we have cookies, add those here to figure out who the sender is.
+user_send is the person the message is sent to, NOT the sender. Sender determined with cookies.
+'''
+def user_page(request, user_send):
+    c = Chat.objects.filter(user1='''put user from cookie here''', user2=user_send)
+    # Checks if there is a chat with those 2 users; should we send error or just make a new one?
+    if not c:
+        return render(request, 'slackers_app/ErrorPage.html',
+                      {
+                          'error_name': 'No chat between these users exists',
+                          'index': reverse('slackers_app:index')
+                      })
+
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            m = Message(chat=c.id, sender='''Cookie again''', content=form.cleaned_data['message'])
+            m.save()
+            return HttpResponseRedirect(reverse('slackers_app:send', args=(user_send)))
+
+    else:
+        form = LoginForm()
+    return render(request, 'slackers_app/FormPage.html',
+                  {
+                      'form': form,
+                      'page': reverse('slackers_app:send', args=(user_send)),
+                      'index': reverse('slackers_app:index'),
+                  })
+
+
 def home(request):
     return render(request, 'slackers_app/home.html', {})
+
+
