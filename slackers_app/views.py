@@ -36,6 +36,7 @@ def index(request):
         form = LoginForm(request.POST)
         if form.is_valid():
             if User.objects.filter(username=form.cleaned_data['username'], password=form.cleaned_data['password']):
+                request.session['username'] = form.cleaned_data['username']
                 return HttpResponseRedirect(reverse('slackers_app:home'))
             else:
                 return render(request, 'slackers_app/ErrorPage.html',
@@ -84,8 +85,35 @@ def user_page(request, user_send):
                       'index': reverse('slackers_app:index'),
                   })
 
-
+'''
 def home(request):
+<<<<<<< HEAD
     return render(request, 'slackers_app/home.html', {})
 
 
+=======
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            return render(request, 'slackers_app/ErrorPage.html',
+                {
+                    'error_name': 'Message functionality has not been implemented yet sad',
+                    'index': reverse('slackers_app:home')
+                })
+    else:
+        if request.session.get('username'):
+            form = MessageForm()
+            u = User.objects.get(username=request.session.get('username'))
+            return render(request, 'slackers_app/home.html',
+            {
+                'real_name': u.real_name,
+                'form': form,
+                'page': reverse('slackers_app:home')
+            })
+        else:
+            return render(request, 'slackers_app/ErrorPage.html',
+                {
+                    'error_name': 'User is not logged in',
+                    'index': reverse('slackers_app:index')
+                })
+'''

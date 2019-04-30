@@ -3,6 +3,9 @@
 <link rel="stylesheet" type="text/css" href="{% static 'slackers_app/home.css' %}">
 
 <div id='chat-list'>
+  <div class='header'>
+    Welcome {{ real_name }}!
+  </div>
   <div class='chat-min'>
     <img class='icon' src='http://placekitten.com/200/236'>
     name
@@ -25,7 +28,11 @@
   </div>
   <div id='chat-body'>
     <div id='new-message'>
-      <input id='message-box'>
+      <form action="{{ page }}" method="post" autocomplete='off'>
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Send">
+      </form>
     </div>
     <div class='message'>
       messsage1
