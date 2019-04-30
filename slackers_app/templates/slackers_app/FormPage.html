@@ -1,14 +1,18 @@
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'slackers_app/FormPage.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'slackers_app/general.css' %}">
 
 <div id="center">
-  <form action="{{ page }}" method="post" class="flex-container">
-    {% csrf_token %}
-    {{ form }}
-    <input type="Submit" value="Apply Changes">
-  </form>
-  <a href="{{ index }}"> <button>
-    Bring me home
-  </button> </a>
+  <div class="block flex-container">
+    <div class="button color2">
+      <form action="{{ page }}" method="post" autocomplete="off">
+        {% csrf_token %}
+        {{ form }}
+        <input type="Submit" value="Apply Changes" class="button-mini">
+      </form>
+    </div>
+    <a href="{{ index }}"> <button class="button-mini">
+      Bring me home
+    </button> </a>
+  </div>
 </div>

@@ -28,7 +28,7 @@
   </div>
   <div id='chat-body'>
     <div id='new-message'>
-      <form action="{{ page }}" method="post" autocomplete='off'>
+      <form action="{{ page }}" method="post" autocomplete="off">
         {% csrf_token %}
         {{ form }}
         <input type="submit" value="Send">

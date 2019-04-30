@@ -14,12 +14,7 @@ class LoginForm(forms.Form):
     username = forms.CharField(label='Username', max_length=100)
     password = forms.CharField(label='Password', max_length=100)
 
-<<<<<<< HEAD
 
 # Form for sending a message:
 class MessageForm(forms.Form):
     message = forms.CharField(label='Message', max_length=1000)
-=======
-class MessageForm(forms.Form):
-    message = forms.CharField(label='Message', max_length=100)
->>>>>>> 7ec87b3907a4e548f5e9002ea2ac4bdbb9237357

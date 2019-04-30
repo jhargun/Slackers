@@ -1,16 +1,18 @@
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'slackers_app/index.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'slackers_app/general.css' %}">
 
 <div id="center">
-  <div class="flex-container">
-    <a href="{{ make }}" class="button">
-      <div class="text"><p> Create a new User </p></div>
+  <div class="block flex-container">
+    <a href="{{ make }}" class="button color1">
+      <p> Create a new User </p>
     </a>
-    <form action="{{ index }}" method="post">
-      {% csrf_token %}
-      {{ form }}
-      <input type="Submit" value="Login">
-    </form>
+    <div class="button color2">
+      <form action="{{ index }}" method="post" autocomplete="off">
+        {% csrf_token %}
+        {{ form }}
+        <input class="button-mini" type="Submit" value="Login">
+      </form>
+    </div>
   </div>
 </div>
