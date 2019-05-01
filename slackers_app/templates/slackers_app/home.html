@@ -9,6 +9,7 @@
   <a href='{{ edit }}'> <button>
     Edit user
   </button> </a>
+  <!--
   <div class='chat-min'>
     <img class='icon' src='http://placekitten.com/200/236'>
     name
@@ -20,7 +21,15 @@
   <div class='chat-min'>
     <img class='icon' src='http://placekitten.com/200/236'>
     name
-  </div>
+  </div> -->
+  <!-- Makes buttons for each chat, clicking will switch to that chat -->
+  {% for chat in chats %}
+    <div class='chat-min'>
+      <a href={{chat[1]}}> <!-- Will this work? Is this how I pass info? -->
+        <p>{{chat[0]}}</p></a>
+    </div>
+  {% endfor %}
+
   <div class='chat-min' id='new-chat'>
     <img class='icon-min' src='https://www.lasernailtherapy.com/wp-content/uploads/2016/10/plus-icon-21.png'>
   </div>

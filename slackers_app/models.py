@@ -12,7 +12,7 @@ class User(models.Model):
     password = models.CharField(max_length=100)  # Storing password as plaintext, terrible security, fix later
     real_name = models.CharField(max_length=100, default='')
 
-    def __str__(self):  # You can return username and password as string, seems like bad security
+    def __str__(self):
         return str(self.id)
 
 
@@ -24,6 +24,10 @@ class Chat(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+    def getInfo(self, getUser1):
+        if getUser1:
+            return
 
 
 class Message(models.Model):

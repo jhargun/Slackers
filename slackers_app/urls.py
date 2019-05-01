@@ -7,4 +7,5 @@ urlpatterns = [
     path('make', views.make, name="make"),
     path('home', views.home, name='home'),
     path('edit', views.edit, name='edit'),
+    path('change_chat/<str:chat_id>', views.switch_chat, name='c_edit')
 ]
