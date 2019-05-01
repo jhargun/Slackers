@@ -4,7 +4,7 @@
 
 <div id='chat-list'>
   <div class='header'>
-    Welcome {{ real_name }}!
+    Welcome {{ user.real_name }}!
   </div>
   <a href='{{ edit }}'> <button>
     Edit user
@@ -23,21 +23,26 @@
     name
   </div> -->
   <!-- Makes buttons for each chat, clicking will switch to that chat -->
-  {% for chat in chats %}
-    <div class='chat-min'>
-      <a href={{chat[1]}}> <!-- Will this work? Is this how I pass info? -->
-        <p>{{chat[0]}}</p></a>
+  {% for user, chat_link in chats %}
+    <div class='chat-min-width'>
+      <a href='{{ chat_link }}'>
+        <div class='chat-min'>
+          {{ user.real_name }}
+        </div>
+      </a>
     </div>
   {% endfor %}
 
-  <div class='chat-min' id='new-chat'>
-    <img class='icon-min' src='https://www.lasernailtherapy.com/wp-content/uploads/2016/10/plus-icon-21.png'>
+  <div class='chat-min-width'>
+    <div class='chat-min' id='new-chat'>
+      <img class='icon-min' src='https://www.lasernailtherapy.com/wp-content/uploads/2016/10/plus-icon-21.png'>
+    </div>
   </div>
 </div>
 <div id='chat'>
-  {% if messages %}
+  {% if user_send %}
   <div id='chat-head'>
-    name
+    {{ user_send.real_name }}
   </div>
   <div id='chat-body'>
     <div id='new-message'>
@@ -47,10 +52,10 @@
         <input type="submit" value="Send">
       </form>
     </div>
-    {% for m in messages %}
+    {% for user, message in messages %}
       <div class='message'>
-        {{ m.content }}
-      <div>
+        {{ user.real_name }}: {{ message.content }}
+      </div>
     {% endfor %}
   </div>
   {% endif %}

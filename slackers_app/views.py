@@ -66,7 +66,7 @@ def home(request):
                         'index': reverse('slackers_app:index')
                       })
     # Throw error if user doesn't exist. This shouldn't be possible, but I made this just in case.
-    if not User.objects.filter(username=request.session.get('user')):
+    if not User.objects.filter(id=request.session.get('user')):
         return render(request, 'slackers_app/ErrorPage.html',
                       {
                           'error_name': 'Invalid user. How did you get here? Is our code bad or are you a hacker?',
@@ -77,7 +77,9 @@ def home(request):
     if request.method == 'POST':
         form = MessageForm(request.POST)
         if form.is_valid():
-            m = Message(chat=c.id, sender=request.session.get('user'), content=form.cleaned_data['message'], time=timezone.now())
+            c = Chat.objects.get(id=request.session.get('cur_chat'))
+            u = User.objects.get(id=request.session.get('user'))
+            m = Message(chat=c.id, sender=u.id, content=form.cleaned_data['message'], time=timezone.now())
             m.save()
             return HttpResponseRedirect(reverse('slackers_app:home'))
     else:
@@ -88,32 +90,30 @@ def home(request):
         chats = []
         # Pass display name of other person and chat id
         for chat in (Chat.objects.filter(user1=u.id)):
-            chats += [User.objects.filter(id=chat.user2).real_name,
-                      str(reverse('slackers_app:c_edit', args=('',))) + str(chat.id)]
+            chats.append((User.objects.get(id=chat.user2),
+                      reverse('slackers_app:c_edit', args=(chat.id,))))
         for chat in (Chat.objects.filter(user2=u.id)):
-            chats += [User.objects.filter(id=chat.user1).real_name,
-                      str(reverse('slackers_app:c_edit', args=('',))) + str(chat.id)]
+            chats.append((User.objects.get(id=chat.user1),
+                      reverse('slackers_app:c_edit', args=(chat.id,))))
 
         data = {
-            'real_name': u.real_name,
+            'user': u,
             'form': form,
             'edit': reverse('slackers_app:edit'),
             'page': reverse('slackers_app:home'),
             'chats': chats,
-            'chatEdit': reverse('slackers_app:c_edit', args=('',)),
+            # 'chatEdit': reverse('slackers_app:c_edit', args=('',)),
         }
 
         # if 'cur_chat' exists, get its messages, else empty
         if request.session.get('cur_chat'):
             c = Chat.objects.get(id=request.session.get('cur_chat'))
-            data['messages'] = Message.objects.filter(chat=c.id).order_by('-time')
-            # Ignore this string for now, it's a work in progress
-            '''chats = []
-            # Pass display name of other person and chat id
-            for chat in (Chat.objects.filter(user1=u.id) | Chat.objects.filter(user2=user.id)):
-                if chat.user1 == u.id:'''
-
+            data['user_send'] = User.objects.get(id=other_user(u, c))
+            data['messages'] = []
+            for message in Message.objects.filter(chat=c.id).order_by('-time'):
+                data['messages'].append((User.objects.get(id=message.sender), message))
         else:
+            data['user_send'] = None
             data['messages'] = None
 
         return render(request, 'slackers_app/home.html', data)
@@ -160,3 +160,12 @@ def edit(request):
                         'error_name': 'User is not logged in',
                         'index': reverse('slackers_app:index')
                     })
+
+
+# get user of chat that is not the one logged in
+def other_user(user, chat):
+    id = str(user.id)
+    if chat.user1 == id:
+        return chat.user2
+    elif chat.user2 == id:
+        return chat.user1

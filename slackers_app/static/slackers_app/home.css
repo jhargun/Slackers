@@ -3,6 +3,11 @@ body {
   margin: 0;
 }
 
+a {
+  text-decoration: none;
+  color: black;
+}
+
 .header {
   text-align: center;
   padding: 5px 0;
@@ -16,16 +21,19 @@ body {
   align-items: center;
 }
 
-.chat-min {
+.chat-min-width {
   width: 100%;
-  height: 50px;
-  padding: 5px 0;
-  display: flex;
-  align-items: center;
 }
 
-.chat-min:hover {
+.chat-min-width:hover {
   background-color: #EEEEEE;
+}
+
+.chat-min {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
 }
 
 #new-chat {
@@ -33,11 +41,11 @@ body {
 }
 
 .icon {
-  margin-right: 5px;
   height: inherit;
 }
 
 .icon-min {
+  margin: 0;
   height: 20px;
 }
 
