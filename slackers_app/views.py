@@ -55,15 +55,23 @@ def index(request):
                     'index': reverse('slackers_app:index')
                 })
 
+
 # I merged home and user_page because the id of the current chat is now stored in the session (cur_chat)
 def home(request):
     # if 'user' not in session info, throw error
     if not request.session.get('user'):
         return render(request, 'slackers_app/ErrorPage.html',
-                    {
+                      {
                         'error_name': 'User is not logged in',
                         'index': reverse('slackers_app:index')
-                    })
+                      })
+    # Throw error if user doesn't exist. This shouldn't be possible, but I made this just in case.
+    if not User.objects.filter(username=request.session.get('user')):
+        return render(request, 'slackers_app/ErrorPage.html',
+                      {
+                          'error_name': 'Invalid user. How did you get here? Is our code bad or are you a hacker?',
+                          'index': reverse('slackers_app:index')
+                      })
 
     # goes here to post a message
     if request.method == 'POST':

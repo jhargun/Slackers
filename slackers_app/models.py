@@ -1,3 +1,6 @@
+# Potentially use this method instead of DateTimeField and auto_now:
+# https://stackoverflow.com/questions/1737017/django-auto-now-and-auto-now-add
+
 from django.db import models
 
 # Create your models here.
