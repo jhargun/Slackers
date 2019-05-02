@@ -4,3 +4,4 @@ gunicorn
 postgres
 psycopg2-binary
 dj_database_url
+whitenoise
