@@ -125,6 +125,7 @@ back to home. I'm not sure if this is good security though since it puts the cha
 would be used for though, since it won't work without the session ID.'''
 def switch_chat(request, chat_id):
     request.session['cur_chat'] = chat_id
+    Chat.objects.get(id=chat_id)
     return HttpResponseRedirect(reverse('slackers_app:home'))
 
 
@@ -143,7 +144,7 @@ def make_chat(request):
                                   'index': reverse('slackers_app:index')
                               })
             other = User.objects.get(username=other_name).id
-            self = request.session.get['user']
+            self = request.session.get('user')
             # Checks if chat already exists
             if Chat.objects.filter(user1=self, user2=other) | Chat.objects.filter(user1=other, user2=self):
                 return render(request, 'slackers_app/ErrorPage.html',
