@@ -128,7 +128,7 @@ def switch_chat(request, chat_id):
     return HttpResponseRedirect(reverse('slackers_app:home'))
 
 
-'''This is unfinished, so if you try to test it it'll mess up. I'll finish this soon.'''
+'''This is unfinished, so if you try to test it it'll mess up. I'll finish this soon.
 # Makes a new chat
 def make_chat(request):
     if request.method == 'POST':
@@ -145,7 +145,7 @@ def make_chat(request):
     else:
         form = NewChatForm()
     return render
-
+'''
 
 # to edit a user (similar to make)
 def edit(request):
