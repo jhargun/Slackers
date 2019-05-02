@@ -128,24 +128,43 @@ def switch_chat(request, chat_id):
     return HttpResponseRedirect(reverse('slackers_app:home'))
 
 
-'''This is unfinished, so if you try to test it it'll mess up. I'll finish this soon.
+'''This is unfinished, so if you try to test it it'll mess up. I'll finish this soon.'''
 # Makes a new chat
 def make_chat(request):
     if request.method == 'POST':
         form = NewChatForm(request.POST)
         if form.is_valid():
-
-                return HttpResponseRedirect(reverse('slackers_app:home'))
-            else:
+            other_name = form.cleaned_data['username']
+            # Checks if other user exists
+            if not User.objects.filter(username=other_name):
                 return render(request, 'slackers_app/ErrorPage.html',
-                            {
-                                'error_name': 'Invalid username or password',
-                                'index': reverse('slackers_app:index')
-                            })
+                              {
+                                  'error_name': 'No user with that username exists.',
+                                  'index': reverse('slackers_app:index')
+                              })
+            other = User.objects.get(username=other_name).id
+            self = request.session.get['user']
+            # Checks if chat already exists
+            if Chat.objects.filter(user1=self, user2=other) | Chat.objects.filter(user1=other, user2=self):
+                return render(request, 'slackers_app/ErrorPage.html',
+                              {
+                                  'error_name': 'That chat already exists.',
+                                  'index': reverse('slackers_app:index')
+                              })
+            # Makes the chat if no errors, changes cookie and redirects user back to home page
+            c = Chat(user1=self, user2=other)
+            c.save()
+            request.session['cur_chat'] = c.id
+            return HttpResponseRedirect(reverse('slackers_app:home'))
     else:
         form = NewChatForm()
-    return render
-'''
+    return render(request, 'slackers_app/FormPage.html',
+                  {
+                      'form': form,
+                      'page': reverse('slackers_app:c_make'),
+                      'index': reverse('slackers_app:home')
+                  })
+
 
 # to edit a user (similar to make)
 def edit(request):
