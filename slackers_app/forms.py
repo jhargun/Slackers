@@ -17,3 +17,7 @@ class LoginForm(forms.Form):
 # Form for sending a message:
 class MessageForm(forms.Form):
     message = forms.CharField(label='Message', max_length=1000)
+
+
+class NewChatForm(forms.Form):
+    username = forms.CharField(label='Other Person\'s Username', max_length=100)

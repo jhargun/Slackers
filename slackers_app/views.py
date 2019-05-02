@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
-from .forms import CreateForm, LoginForm, MessageForm
+from .forms import CreateForm, LoginForm, MessageForm, NewChatForm
 from .models import User, Chat, Message
 
 
@@ -69,7 +69,7 @@ def home(request):
     if not User.objects.filter(id=request.session.get('user')):
         return render(request, 'slackers_app/ErrorPage.html',
                       {
-                          'error_name': 'Invalid user. How did you get here? Is our code bad or are you a hacker?',
+                          'error_name': 'Invalid user. How did you get here? Is our code bad?',
                           'index': reverse('slackers_app:index')
                       })
 
@@ -102,6 +102,7 @@ def home(request):
             'edit': reverse('slackers_app:edit'),
             'page': reverse('slackers_app:home'),
             'chats': chats,
+            'cMake': reverse('slackers_app:c_make'),
             # 'chatEdit': reverse('slackers_app:c_edit', args=('',)),
         }
 
@@ -125,6 +126,25 @@ would be used for though, since it won't work without the session ID.'''
 def switch_chat(request, chat_id):
     request.session['cur_chat'] = chat_id
     return HttpResponseRedirect(reverse('slackers_app:home'))
+
+
+'''This is unfinished, so if you try to test it it'll mess up. I'll finish this soon.'''
+# Makes a new chat
+def make_chat(request):
+    if request.method == 'POST':
+        form = NewChatForm(request.POST)
+        if form.is_valid():
+
+                return HttpResponseRedirect(reverse('slackers_app:home'))
+            else:
+                return render(request, 'slackers_app/ErrorPage.html',
+                            {
+                                'error_name': 'Invalid username or password',
+                                'index': reverse('slackers_app:index')
+                            })
+    else:
+        form = NewChatForm()
+    return render
 
 
 # to edit a user (similar to make)
