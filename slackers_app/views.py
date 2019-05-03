@@ -11,6 +11,7 @@ def make(request):
     if request.method == 'POST':
         form = CreateForm(request.POST)
         if form.is_valid():
+            # Checks if a user already has that username
             if User.objects.filter(username=form.cleaned_data['username']):
                 return render(request, 'slackers_app/ErrorPage.html',
                             {
@@ -18,6 +19,7 @@ def make(request):
                                 'index': reverse('slackers_app:make')
                             })
             else:
+                # Makes new user and adds user ID to browser's cookies, then redirects to that user's home page
                 u = User(username=form.cleaned_data['username'], password=form.cleaned_data['password'], real_name=form.cleaned_data['real_name'])
                 u.save()
                 request.session['user'] = u.id
@@ -27,25 +29,27 @@ def make(request):
         return render(request, 'slackers_app/FormPage.html',
                     {
                         'form': form,
-                        'page': reverse('slackers_app:make'),
-                        'index': reverse('slackers_app:index')
+                        'page': reverse('slackers_app:make'),  # This page's url
+                        'index': reverse('slackers_app:index'),  # Home page url (for go back button)
                     })
 
 
-# Index page
+# Index page (home page for website, before a user logs in)
 def index(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
+            # Checks if the username and password entered match a user
             if User.objects.filter(username=form.cleaned_data['username'], password=form.cleaned_data['password']):
-                request.session['user'] = User.objects.get(username=form.cleaned_data['username']).id  # lol kind of insecure
+                # Sets the user id cookie and redirects the user to the home page, which uses cookie to identify user
+                request.session['user'] = User.objects.get(username=form.cleaned_data['username']).id
                 return HttpResponseRedirect(reverse('slackers_app:home'))
             else:
                 return render(request, 'slackers_app/ErrorPage.html',
-                            {
+                              {
                                 'error_name': 'Invalid username or password',
                                 'index': reverse('slackers_app:index')
-                            })
+                              })
     else:
         form = LoginForm()
     return render(request, 'slackers_app/index.html',
@@ -56,7 +60,7 @@ def index(request):
                 })
 
 
-# I merged home and user_page because the id of the current chat is now stored in the session (cur_chat)
+# The homepage for a user once they've logged in
 def home(request):
     # if 'user' not in session info, throw error
     if not request.session.get('user'):
@@ -65,7 +69,7 @@ def home(request):
                         'error_name': 'User is not logged in',
                         'index': reverse('slackers_app:index')
                       })
-    # Throw error if user doesn't exist. This shouldn't be possible, but I made this just in case.
+    # Throw error if user doesn't exist. It shouldn't be possible to get this, but I made this for troubleshooting.
     if not User.objects.filter(id=request.session.get('user')):
         return render(request, 'slackers_app/ErrorPage.html',
                       {
@@ -77,16 +81,16 @@ def home(request):
     if request.method == 'POST':
         form = MessageForm(request.POST)
         if form.is_valid():
+            # Makes the message and redirects back to the same page, updating the view so you can see the message
             c = Chat.objects.get(id=request.session.get('cur_chat'))
             u = User.objects.get(id=request.session.get('user'))
-            m = Message(chat=c.id, sender=u.id, content=form.cleaned_data['message'], time=timezone.now())
+            m = Message(chat=c.id, sender=u.id, content=form.cleaned_data['message'])  # , time=timezone.now())
             m.save()
             return HttpResponseRedirect(reverse('slackers_app:home'))
     else:
         form = MessageForm()
         u = User.objects.get(id=request.session.get('user'))
 
-        # A slight problem I've noticed is that the user could be user 1 or 2, so you have to account for that
         chats = []
         # Pass display name of other person and chat id
         for chat in (Chat.objects.filter(user1=u.id)):
@@ -99,11 +103,10 @@ def home(request):
         data = {
             'user': u,
             'form': form,
-            'edit': reverse('slackers_app:edit'),
-            'page': reverse('slackers_app:home'),
-            'chats': chats,
-            'cMake': reverse('slackers_app:c_make'),
-            # 'chatEdit': reverse('slackers_app:c_edit', args=('',)),
+            'edit': reverse('slackers_app:edit'),  # Pass template the link to the page to edit user info
+            'page': reverse('slackers_app:home'),  # Pass link to this page
+            'chats': chats,  # Pass info about a user's chats: Passes the chat object and the link to edit it
+            'cMake': reverse('slackers_app:c_make'),  # Pass link to make a chat
         }
 
         # if 'cur_chat' exists, get its messages, else empty
@@ -121,21 +124,20 @@ def home(request):
 
 
 '''This is a quick redirect from the change chat button that switches the cookie to change the chat displayed, then goes
-back to home. I'm not sure if this is good security though since it puts the chat ID in the url. Not sure what that
-would be used for though, since it won't work without the session ID.'''
+back to home. I'm not sure if this is good security though since it puts the chat ID in the url. Not ideal, but at least 
+it shouldn't work without the session ID.'''
 def switch_chat(request, chat_id):
     request.session['cur_chat'] = chat_id
-    Chat.objects.get(id=chat_id).save()
+    Chat.objects.get(id=chat_id).save()  # Doing this updates the date of the chat
     return HttpResponseRedirect(reverse('slackers_app:home'))
 
 
-'''This is unfinished, so if you try to test it it'll mess up. I'll finish this soon.'''
 # Makes a new chat
 def make_chat(request):
     if request.method == 'POST':
         form = NewChatForm(request.POST)
         if form.is_valid():
-            other_name = form.cleaned_data['username']
+            other_name = form.cleaned_data['username']  # Other person's username
             # Checks if other user exists
             if not User.objects.filter(username=other_name):
                 return render(request, 'slackers_app/ErrorPage.html',
@@ -143,8 +145,8 @@ def make_chat(request):
                                   'error_name': 'No user with that username exists.',
                                   'index': reverse('slackers_app:index')
                               })
-            other = User.objects.get(username=other_name).id
-            self = request.session.get('user')
+            other = User.objects.get(username=other_name).id  # Other person's id
+            self = request.session.get('user')  # Your id
             # Checks if chat already exists
             if Chat.objects.filter(user1=self, user2=other) | Chat.objects.filter(user1=other, user2=self):
                 return render(request, 'slackers_app/ErrorPage.html',

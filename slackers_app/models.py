@@ -25,10 +25,6 @@ class Chat(models.Model):
     def __str__(self):
         return str(self.id)
 
-    def getInfo(self, getUser1):
-        if getUser1:
-            return
-
 
 class Message(models.Model):
     chat = models.CharField(max_length=100)  # Use chat id
