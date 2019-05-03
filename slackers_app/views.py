@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from django.utils import timezone
+# from django.utils import timezone
 from .forms import CreateForm, LoginForm, MessageForm, NewChatForm
 from .models import User, Chat, Message
 
@@ -95,10 +95,10 @@ def home(request):
         # Pass display name of other person and chat id
         for chat in (Chat.objects.filter(user1=u.id)):
             chats.append((User.objects.get(id=chat.user2),
-                      reverse('slackers_app:c_edit', args=(chat.id,))))
+                          reverse('slackers_app:c_edit', args=(chat.id,))))
         for chat in (Chat.objects.filter(user2=u.id)):
             chats.append((User.objects.get(id=chat.user1),
-                      reverse('slackers_app:c_edit', args=(chat.id,))))
+                          reverse('slackers_app:c_edit', args=(chat.id,))))
 
         data = {
             'user': u,
@@ -128,7 +128,6 @@ back to home. I'm not sure if this is good security though since it puts the cha
 it shouldn't work without the session ID.'''
 def switch_chat(request, chat_id):
     request.session['cur_chat'] = chat_id
-    Chat.objects.get(id=chat_id).save()  # Doing this updates the date of the chat
     return HttpResponseRedirect(reverse('slackers_app:home'))
 
 
@@ -142,12 +141,12 @@ def make_chat(request):
             if not User.objects.filter(username=other_name):
                 return render(request, 'slackers_app/ErrorPage.html',
                               {
-                                  'error_name': 'No user with that username exists.',
+                                  'error_name': 'No user with that username exists. Maybe they changed their username?',
                                   'index': reverse('slackers_app:index')
                               })
             other = User.objects.get(username=other_name).id  # Other person's id
             self = request.session.get('user')  # Your id
-            # Checks if chat already exists
+            # Checks if a chat between those users already exists
             if Chat.objects.filter(user1=self, user2=other) | Chat.objects.filter(user1=other, user2=self):
                 return render(request, 'slackers_app/ErrorPage.html',
                               {
@@ -171,11 +170,13 @@ def make_chat(request):
 
 # to edit a user (similar to make)
 def edit(request):
+    # Checks if user has user id cookie (if not, they're not logged in)
     if request.session.get('user'):
         u = User.objects.get(id=request.session.get('user'))
         if request.method == 'POST':
             form = CreateForm(request.POST)
             if form.is_valid():
+                # Checks if the username already exists
                 if u.username != form.cleaned_data['username'] and User.objects.filter(username=form.cleaned_data['username']):
                     return render(request, 'slackers_app/ErrorPage.html',
                                 {
@@ -183,6 +184,9 @@ def edit(request):
                                     'index': reverse('slackers_app:edit')
                                 })
                 else:
+                    '''If it doesn't, the user can change their username, password, and display name. This won't break
+                    anything since most if it uses the user_id to identify a user, which cannot be changed. The user is
+                    then sent back to their home page.'''
                     u.username = form.cleaned_data['username']
                     u.password = form.cleaned_data['password']
                     u.real_name = form.cleaned_data['real_name']
@@ -204,7 +208,7 @@ def edit(request):
                     })
 
 
-# get user of chat that is not the one logged in
+# Gets the user of a chat that is not the one logged in. This is just a helper method.
 def other_user(user, chat):
     id = str(user.id)
     if chat.user1 == id:
