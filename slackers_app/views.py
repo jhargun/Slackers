@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-# from django.utils import timezone
 from .forms import CreateForm, LoginForm, MessageForm, NewChatForm
 from .models import User, Chat, Message
+import django.contrib.auth.hashers as hashers  # This is used to hash the password
 
 
 # Makes new user
@@ -20,7 +20,9 @@ def make(request):
                             })
             else:
                 # Makes new user and adds user ID to browser's cookies, then redirects to that user's home page
-                u = User(username=form.cleaned_data['username'], password=form.cleaned_data['password'], real_name=form.cleaned_data['real_name'])
+                u = User(username=form.cleaned_data['username'],
+                         password=hashers.make_password(form.cleaned_data['password']),
+                         real_name=form.cleaned_data['real_name'])
                 u.save()
                 request.session['user'] = u.id
                 return HttpResponseRedirect(reverse('slackers_app:home'))
@@ -40,7 +42,8 @@ def index(request):
         form = LoginForm(request.POST)
         if form.is_valid():
             # Checks if the username and password entered match a user
-            if User.objects.filter(username=form.cleaned_data['username'], password=form.cleaned_data['password']):
+            if User.objects.filter(username=form.cleaned_data['username'],
+                                   password=hashers.make_password(form.cleaned_data['password'])):
                 # Sets the user id cookie and redirects the user to the home page, which uses cookie to identify user
                 request.session['user'] = User.objects.get(username=form.cleaned_data['username']).id
                 return HttpResponseRedirect(reverse('slackers_app:home'))
@@ -193,10 +196,10 @@ def edit(request):
                                 })
                 else:
                     '''If it doesn't, the user can change their username, password, and display name. This won't break
-                    anything since most if it uses the user_id to identify a user, which cannot be changed. The user is
+                    anything since the methods use the user_id to identify a user, which cannot be changed. The user is
                     then sent back to their home page.'''
                     u.username = form.cleaned_data['username']
-                    u.password = form.cleaned_data['password']
+                    u.password = hashers.make_password(form.cleaned_data['password'])
                     u.real_name = form.cleaned_data['real_name']
                     u.save()
                     return HttpResponseRedirect(reverse('slackers_app:home'))

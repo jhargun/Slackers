@@ -11,6 +11,7 @@ This is a list of the resources off of which we built this project.
 * https://docs.djangoproject.com/en/2.2/topics/db/queries/
 * https://tableplus.io/blog/2018/10/how-to-start-stop-restart-postgresql-server.html
 * https://overiq.com/django-1-10/cookies-in-django/
+* https://docs.djangoproject.com/en/2.2/topics/auth/passwords/
 
 ## Documentation
 * https://www.w3schools.com/tags/tag_input.asp

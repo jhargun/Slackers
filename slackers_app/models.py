@@ -28,7 +28,8 @@ class Message(models.Model):
     chat = models.CharField(max_length=100)  # Use chat id
     sender = models.CharField(max_length=100)  # Use sender's username
     content = models.CharField(max_length=1000)  # Max length of messages is 1000 characters
-    time = models.DateTimeField(auto_now_add=True)  # Makes timestamp at time when object created
+    time = models.DateTimeField(auto_now_add=True)  # Timestamp
+    # The auto_now_add=True makes it make a timestamp with the current time when the message is created
 
     def __str__(self):
         return str(self.id)
