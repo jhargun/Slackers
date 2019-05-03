@@ -6,12 +6,14 @@
   <div class='header'>
     Welcome {{ user.real_name }}!
   </div>
-  <a href='{{ edit }}'> <button>
-    Edit user
-  </button> </a>
-  <a href='{{ logout }}'> <button>
-    Logout
-  </button> </a>
+  <div>
+    <a href='{{ edit }}'> <button>
+      Edit user
+    </button> </a>
+    <a href='{{ logout }}'> <button>
+      Logout
+    </button> </a>
+  </div>
   <!--
   <div class='chat-min'>
     <img class='icon' src='http://placekitten.com/200/236'>
@@ -50,18 +52,18 @@
     {{ user_send.real_name }}
   </div>
   <div id='chat-body'>
-    <div id='new-message'>
-      <form action="{{ page }}" method="post" autocomplete="off">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Send">
-      </form>
-    </div>
     {% for user, message in messages %}
       <div class='message'>
         {{ user.real_name }}: {{ message.content }}
       </div>
     {% endfor %}
+  </div>
+  <div id='new-message'>
+    <form action="{{ page }}" method="post" autocomplete="off">
+      {% csrf_token %}
+      {{ form }}
+      <input type="submit" value="Send" id='send-message'>
+    </form>
   </div>
   {% endif %}
 </div>

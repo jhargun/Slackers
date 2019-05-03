@@ -16,7 +16,11 @@ class LoginForm(forms.Form):
 
 # Form for sending a message:
 class MessageForm(forms.Form):
-    message = forms.CharField(label='Message', max_length=1000)
+    message = forms.CharField(label='', max_length=1000, widget=forms.TextInput(attrs=
+    {
+        'class': 'message-box',
+        'autofocus': '',
+    }))
 
 
 class NewChatForm(forms.Form):

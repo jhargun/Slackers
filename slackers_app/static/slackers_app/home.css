@@ -1,11 +1,19 @@
 body {
   height: 100%;
   margin: 0;
+  display: flex;
+  font-family: "Roboto"
 }
 
 a {
   text-decoration: none;
   color: black;
+}
+
+button {
+  padding: 5px;
+  border-radius: 20px;
+  margin: 0 5px;
 }
 
 .header {
@@ -19,6 +27,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: skyblue;
 }
 
 .chat-min-width {
@@ -26,7 +35,7 @@ a {
 }
 
 .chat-min-width:hover {
-  background-color: #EEEEEE;
+  background-color: lightblue;
 }
 
 .chat-min {
@@ -53,34 +62,50 @@ a {
   height: 100%;
   width: 80%;
   border-left-style: solid;
+  background-color: lightgreen;
+  display: flex;
+  flex-direction: column;
 }
 
 #chat-head {
   text-align: center;
   border-bottom-style: solid;
-  height: 30px;
+  padding: 5px;
+  background-color: limegreen;
 }
 
 #chat-body {
-  height: calc(100% - 30px);
+  flex-grow: 1;
   display: flex;
   flex-direction: column-reverse;
+  overflow: auto;
 }
 
 .message {
   padding: 10px;
-  width: 100%;
+  width: auto;
 }
 
 .message:hover {
-  background-color: #EEEEEE
+  background-color: palegreen;
 }
 
 #new-message {
   border-top-style: solid;
+  padding: 10px 10px;
+  background: limegreen;
 }
 
+#new-message form {
+  margin: 0;
+}
 
-body {
-  display: flex;
+.message-box {
+  font-size: 14pt;
+  width: 100%;
+  border-radius: 5px;
+}
+
+#send-message {
+  display: none;
 }

@@ -125,7 +125,7 @@ def home(request):
 
 
 '''This is a quick redirect from the change chat button that switches the cookie to change the chat displayed, then goes
-back to home. I'm not sure if this is good security though since it puts the chat ID in the url. Not ideal, but at least 
+back to home. I'm not sure if this is good security though since it puts the chat ID in the url. Not ideal, but at least
 it shouldn't work without the session ID.'''
 def switch_chat(request, chat_id):
     request.session['cur_chat'] = chat_id
@@ -143,16 +143,23 @@ def make_chat(request):
                 return render(request, 'slackers_app/ErrorPage.html',
                               {
                                   'error_name': 'No user with that username exists. Maybe they changed their username?',
-                                  'index': reverse('slackers_app:index')
+                                  'index': reverse('slackers_app:c_make')
                               })
             other = User.objects.get(username=other_name).id  # Other person's id
             self = request.session.get('user')  # Your id
+            # Checks if you're trying to make a chat with yourself
+            if self == other:
+                return render(request, 'slackers_app/ErrorPage.html',
+                              {
+                                  'error_name': 'You can\'t make a chat with yourself!',
+                                  'index': reverse('slackers_app:c_make')
+                              })
             # Checks if a chat between those users already exists
             if Chat.objects.filter(user1=self, user2=other) | Chat.objects.filter(user1=other, user2=self):
                 return render(request, 'slackers_app/ErrorPage.html',
                               {
                                   'error_name': 'That chat already exists.',
-                                  'index': reverse('slackers_app:index')
+                                  'index': reverse('slackers_app:c_make')
                               })
             # Makes the chat if no errors, changes cookie and redirects user back to home page
             c = Chat(user1=self, user2=other)
@@ -209,11 +216,9 @@ def edit(request):
                     })
 
 
-# Logs the user out by deleting all cookies, then sending them to the login or create user page
+# Logs the user out by deleting the session cookie, then sending them to the login / create user page
 def logout(request):
-    request.delete_cookie('user')
-    request.delete_cookie('cur_chat')
-    logout(request)  # This deletes the session data, while the first two delete the other cookies we made
+    request.session.flush()
     return HttpResponseRedirect(reverse('slackers_app:index'))
 
 
