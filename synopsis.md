@@ -8,6 +8,9 @@ This is a list of the resources off of which we built this project.
 ## Tutorials
 * https://www.tangowithdjango.com/book/chapters/cookie.html
 * https://docs.djangoproject.com/en/2.2/topics/forms/modelforms/
+* https://docs.djangoproject.com/en/2.2/topics/db/queries/
+* https://tableplus.io/blog/2018/10/how-to-start-stop-restart-postgresql-server.html
+* https://overiq.com/django-1-10/cookies-in-django/
 
 ## Documentation
 * https://www.w3schools.com/tags/tag_input.asp
@@ -21,3 +24,4 @@ This is a list of the resources off of which we built this project.
 * https://stackoverflow.com/questions/4424435/how-to-convert-a-django-queryset-to-a-list
 * https://stackoverflow.com/questions/4599423/using-url-in-django-templates
 * https://stackoverflow.com/questions/252703/what-is-the-difference-between-pythons-list-methods-append-and-extend
+* https://stackoverflow.com/questions/1275357/django-logoutredirect-to-home-page-delete-cookie

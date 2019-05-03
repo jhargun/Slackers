@@ -103,10 +103,11 @@ def home(request):
         data = {
             'user': u,
             'form': form,
-            'edit': reverse('slackers_app:edit'),  # Pass template the link to the page to edit user info
-            'page': reverse('slackers_app:home'),  # Pass link to this page
-            'chats': chats,  # Pass info about a user's chats: Passes the chat object and the link to edit it
-            'cMake': reverse('slackers_app:c_make'),  # Pass link to make a chat
+            'edit': reverse('slackers_app:edit'),       # Passes the link to the page to edit user info
+            'page': reverse('slackers_app:home'),       # Passes link to this page
+            'chats': chats,                             # Passes the chat object and the link to edit it
+            'cMake': reverse('slackers_app:c_make'),    # Passes link to make a chat
+            'logout': reverse('slackers_app:logout'),   # Passes link to logout
         }
 
         # if 'cur_chat' exists, get its messages, else empty
@@ -206,6 +207,14 @@ def edit(request):
                         'error_name': 'User is not logged in',
                         'index': reverse('slackers_app:index')
                     })
+
+
+# Logs the user out by deleting all cookies, then sending them to the login or create user page
+def logout(request):
+    request.delete_cookie('user')
+    request.delete_cookie('cur_chat')
+    logout(request)  # This deletes the session data, while the first two delete the other cookies we made
+    return HttpResponseRedirect(reverse('slackers_app:index'))
 
 
 # Gets the user of a chat that is not the one logged in. This is just a helper method.
