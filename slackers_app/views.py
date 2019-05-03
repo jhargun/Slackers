@@ -42,15 +42,23 @@ def index(request):
         form = LoginForm(request.POST)
         if form.is_valid():
             # Checks if the username and password entered match a user
-            if User.objects.filter(username=form.cleaned_data['username'],
-                                   password=hashers.make_password(form.cleaned_data['password'])):
+            # if User.objects.filter(username=form.cleaned_data['username'],
+            #                        password=hashers.make_password(form.cleaned_data['password'])):
+            if not User.objects.filter(username=form.cleaned_data['username']):
+                return render(request, 'slackers_app/ErrorPage.html',
+                              {
+                                  'error_name': 'Invalid username.',
+                                  'index': reverse('slackers_app:index')
+                              })
+            u = User.objects.get(username=form.cleaned_data['username'])
+            if hashers.check_password(form.cleaned_data['password'], u.password):
                 # Sets the user id cookie and redirects the user to the home page, which uses cookie to identify user
-                request.session['user'] = User.objects.get(username=form.cleaned_data['username']).id
+                request.session['user'] = u.id
                 return HttpResponseRedirect(reverse('slackers_app:home'))
             else:
                 return render(request, 'slackers_app/ErrorPage.html',
                               {
-                                'error_name': 'Invalid username or password',
+                                'error_name': 'Incorrect password.',
                                 'index': reverse('slackers_app:index')
                               })
     else:
